@@ -3,7 +3,7 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 # Router IP Address is 10.0.15.181-184
-api_url = "https://10.0.15.138/restconf/data"
+api_url = "https://10.0.15.61/restconf/data"
 
 # the RESTCONF HTTP headers, including the Accept and Content-Type
 # Two YANG data formats (JSON and XML) work with RESTCONF 
@@ -11,7 +11,7 @@ headers =  {
     "Accept": "application/yang-data+json",
     "Content-Type": "application/yang-data+json",
 }
-basicauth = ("cisco", "cisco123!")
+basicauth = ("admin", "cisco")
 studentID = "66070041"
 
 def create():
@@ -21,7 +21,7 @@ def create():
             "type": "iana-if-type:softwareLoopback",
             "enabled": True,
             "ietf-ip:ipv4": {
-                "address": [{"ip": "172.30.30.1", "netmask": "255.255.255.0"}]
+                "address": [{"ip": "172.0.41.1", "netmask": "255.255.255.0"}]
             },
             "ietf-ip:ipv6": {},
         }

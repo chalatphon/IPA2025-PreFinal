@@ -1,9 +1,9 @@
 from netmiko import ConnectHandler
 from pprint import pprint
 
-device_ip = "10.0.15.138"
-username = "cisco"
-password = "cisco123!"
+device_ip = "10.0.15.61"
+username = "admin"
+password = "cisco"
 
 device_params = {
     "device_type": "cisco_ios",
