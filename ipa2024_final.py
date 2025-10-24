@@ -77,8 +77,10 @@ while True:
     if message.startswith("/66070041"):
 
         # extract the command
-        myinput = message.split(" ")
+        myinput = message.split(" ",maxsplit=3)
         check = len(myinput)
+        deviceip = myinput[1]
+        
         if(check == 2):
             command = myinput[1]
             if(command == "restconf"):
@@ -97,48 +99,58 @@ while True:
                 responseMessage = "Error: No command found"
             else:
                 responseMessage = "God help me"
-        elif(check == 3 and api == "restconf"):
-            deviceip = myinput[1]
+        elif(check == 3):
             command = myinput[2]
-            if command == "create":
-                responseMessage = restconf_final.create(deviceip)
-            elif command == "delete":
-                responseMessage = restconf_final.delete(deviceip)
-            elif command == "enable":
-                responseMessage = restconf_final.enable(deviceip)
-            elif command == "disable":
-                responseMessage = restconf_final.disable(deviceip)
-            elif command == "status":
-                responseMessage = restconf_final.status(deviceip)
-            elif command == "gigabit_status":
-                responseMessage = netmiko_final.gigabit_status(deviceip)
-            elif command == "showrun":
-                response = ansible_final.showrun()
-                responseMessage = response["msg"]
-                print(responseMessage)
+            if(api == "restconf" and command in clist):
+                if command == "create":
+                    responseMessage = restconf_final.create(deviceip)
+                elif command == "delete":
+                    responseMessage = restconf_final.delete(deviceip)
+                elif command == "enable":
+                    responseMessage = restconf_final.enable(deviceip)
+                elif command == "disable":
+                    responseMessage = restconf_final.disable(deviceip)
+                elif command == "status":
+                    responseMessage = restconf_final.status(deviceip)
+                elif command == "gigabit_status":
+                    responseMessage = netmiko_final.gigabit_status(deviceip)
+                elif command == "showrun":
+                    response = ansible_final.showrun(deviceip)
+                    responseMessage = response["msg"]
+                    print(responseMessage)
+                else:
+                    responseMessage = "Error: No command or unknown command"
+            elif(api == "netconf" and command in clist):
+                command = myinput[2]
+                if command == "create":
+                    responseMessage = netconf_final.create(deviceip)
+                elif command == "delete":
+                    responseMessage = netconf_final.delete(deviceip)
+                elif command == "enable":
+                    responseMessage = netconf_final.enable(deviceip)
+                elif command == "disable":
+                    responseMessage = netconf_final.disable(deviceip)
+                elif command == "status":
+                    responseMessage = netconf_final.status(deviceip)
+                elif command == "gigabit_status":
+                    responseMessage = netmiko_final.gigabit_status(deviceip)
+                elif command == "showrun":
+                    response = ansible_final.showrun(deviceip)
+                    responseMessage = response["msg"]
+                    print(responseMessage)
+                else:
+                    responseMessage = "Error: No command or unknown command"
+            elif(command == "motd"):
+                    responseMessage = netmiko_final.show_motd(deviceip)
             else:
-                responseMessage = "Error: No command or unknown command"
-        elif(check == 3 and api == "netconf"):
-            deviceip = myinput[1]
+                responseMessage = "unknow command"    
+        elif(check == 4):
             command = myinput[2]
-            if command == "create":
-                responseMessage = netconf_final.create(deviceip)
-            elif command == "delete":
-                responseMessage = netconf_final.delete(deviceip)
-            elif command == "enable":
-                responseMessage = netconf_final.enable(deviceip)
-            elif command == "disable":
-                responseMessage = netconf_final.disable(deviceip)
-            elif command == "status":
-                responseMessage = netconf_final.status(deviceip)
-            elif command == "gigabit_status":
-                responseMessage = netmiko_final.gigabit_status(deviceip)
-            elif command == "showrun":
-                response = ansible_final.showrun()
-                responseMessage = response["msg"]
-                print(responseMessage)
-            else:
-                responseMessage = "Error: No command or unknown command"
+            if command == "motd":   
+                sentence = myinput[3]
+                response = ansible_final.confmotd(deviceip,sentence)
+                if response["status"] == "OK":
+                    responseMessage = response['status'] + ": success"   
         else:
             responseMessage = "Opps you did something wrong"
 

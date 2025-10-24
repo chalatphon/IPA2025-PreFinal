@@ -38,7 +38,7 @@ def create(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is created successfully using Netconf"
     except:
-        return "Oh nooo"
+        return f"Cannot create: Interface loopback {studentID}"
 
 def delete(ip):
     m = manager.connect(
@@ -48,6 +48,9 @@ def delete(ip):
     password="cisco",
     hostkey_verify=False
     )
+    current_status = status(ip) 
+    if "No Interface" in current_status:
+        return f"Cannot delete: Interface loopback {studentID}"
     netconf_config = """
     <config xmlns:xc="urn:ietf:params:xml:ns:netconf:base:1.0">
      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
@@ -67,9 +70,11 @@ def delete(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is delete successfully using Netconf"
     except:
-        return "holy moly"
-
+        return f"Cannot delete: Interface loopback {studentID}"
 def disable(ip):
+    current_status = status(ip) 
+    if "No Interface" in current_status:
+        return f"Cannot shutdown: Interface loopback {studentID}"
     m = manager.connect(
     host= ip,
     port=830,
@@ -97,7 +102,7 @@ def disable(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is disable successfully using Netconf"
     except:
-        return "holy moly"
+        return f"Cannot shutdown: Interface loopback {studentID}"
 
 def enable(ip):
     m = manager.connect(
@@ -127,7 +132,7 @@ def enable(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is enable successfully using Netconf"
     except:
-        return "holy moly"
+        return f"Cannot enable: Interface loopback {studentID}"
 
 
 def status(ip):
@@ -174,5 +179,5 @@ def status(ip):
         elif admin_status == 'down' and oper_status == 'down':
             return f"Interface loopback {studentID} is disabled (checked by Netconf)"
     except:
-        return "moly moly "
+        return f"Undefined Error"
 

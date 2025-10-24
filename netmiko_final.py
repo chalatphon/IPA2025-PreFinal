@@ -1,17 +1,18 @@
 from netmiko import ConnectHandler
 from pprint import pprint
 
-device_ip = "10.0.15.61"
-username = "admin"
-password = "cisco"
 
-device_params = {
-    "device_type": "cisco_ios",
-    "ip": device_ip,
-    "username": username,
-    "password": password,
-}
-def gigabit_status():
+def gigabit_status(ip):
+    device_ip = ip
+    username = "admin"
+    password = "cisco"
+
+    device_params = {
+        "device_type": "cisco_ios",
+        "ip": device_ip,
+        "username": username,
+        "password": password,
+    }
     ans = ""
     with ConnectHandler(**device_params) as ssh:
         up = 0
@@ -31,3 +32,18 @@ def gigabit_status():
         ans = f"{ans[:-2]} -> {up} up, {down} down, {admin_down} administratively down"
         pprint(ans)
         return ans
+
+def show_motd(ip):
+    device_ip = ip
+    username = "admin"
+    password = "cisco"
+
+    device_params = {
+        "device_type": "cisco_ios",
+        "ip": device_ip,
+        "username": username,
+        "password": password,
+    }
+    with ConnectHandler(**device_params) as ssh:
+        result = ssh.send_command("show banner motd")
+        return result
