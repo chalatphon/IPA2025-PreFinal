@@ -22,9 +22,8 @@ def create(ip):
             "type": "iana-if-type:softwareLoopback",
             "enabled": True,
             "ietf-ip:ipv4": {
-                "address": [{"ip": "172.0.41.1", "netmask": "255.255.255.0"}]
+                "address": [{"ip": "172.0.41.25", "netmask": "255.255.255.0"}]
             },
-            "ietf-ip:ipv6": {},
         }
     }
 
@@ -41,6 +40,8 @@ def create(ip):
         return f"Interface loopback {studentID} is created successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
+        print('Response Body:', resp.text)
+        print('Response Headers:', resp.headers)  
         return f"Cannot create: Interface loopback {studentID}"
 
 
@@ -58,6 +59,7 @@ def delete(ip):
         return f"Interface loopback {studentID} is deleted successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
+        print('Response Body:', resp.text)
         return f"Cannot delete: Interface loopback {studentID}"
 
 

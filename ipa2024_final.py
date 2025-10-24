@@ -12,6 +12,7 @@ import json
 import time
 import os
 import restconf_final
+import netconf_final
 import netmiko_final
 import ansible_final
 from dotenv import load_dotenv
@@ -109,6 +110,27 @@ while True:
                 responseMessage = restconf_final.disable(deviceip)
             elif command == "status":
                 responseMessage = restconf_final.status(deviceip)
+            elif command == "gigabit_status":
+                responseMessage = netmiko_final.gigabit_status(deviceip)
+            elif command == "showrun":
+                response = ansible_final.showrun()
+                responseMessage = response["msg"]
+                print(responseMessage)
+            else:
+                responseMessage = "Error: No command or unknown command"
+        elif(check == 3 and api == "netconf"):
+            deviceip = myinput[1]
+            command = myinput[2]
+            if command == "create":
+                responseMessage = netconf_final.create(deviceip)
+            elif command == "delete":
+                responseMessage = netconf_final.delete(deviceip)
+            elif command == "enable":
+                responseMessage = netconf_final.enable(deviceip)
+            elif command == "disable":
+                responseMessage = netconf_final.disable(deviceip)
+            elif command == "status":
+                responseMessage = netconf_final.status(deviceip)
             elif command == "gigabit_status":
                 responseMessage = netmiko_final.gigabit_status(deviceip)
             elif command == "showrun":
