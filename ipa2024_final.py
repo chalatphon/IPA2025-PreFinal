@@ -90,15 +90,11 @@ while True:
                 api = "netconf"
                 responseMessage = "Ok: Netconf"
             elif(command in clist and api == ""):
-                print(api)
                 responseMessage = "Error: No method specified"
             elif(command in clist and api != ""):
-                print("hello")
                 responseMessage = "Error: No IP specified"
-            elif(command not in clist and api != ""):
+            elif(command not in clist and (api != "" or api == "")):
                 responseMessage = "Error: No command found"
-            else:
-                responseMessage = "God help me"
         elif(check == 3):
             command = myinput[2]
             if(api == "restconf" and command in clist):
@@ -142,8 +138,10 @@ while True:
                     responseMessage = "Error: No command or unknown command"
             elif(command == "motd"):
                     responseMessage = netmiko_final.show_motd(deviceip)
+            elif(api == "" and command in clist):
+                responseMessage = "Error: No method specified"    
             else:
-                responseMessage = "unknow command"    
+                responseMessage = "Error: No command or unknown command"
         elif(check == 4):
             command = myinput[2]
             if command == "motd":   
