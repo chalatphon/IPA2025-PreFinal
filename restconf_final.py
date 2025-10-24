@@ -42,7 +42,7 @@ def create(ip):
         print('Error. Status Code: {}'.format(resp.status_code))
         print('Response Body:', resp.text)
         print('Response Headers:', resp.headers)  
-        return f"Cannot create: Interface loopback {studentID}"
+        return f"Cannot create: Interface loopback {studentID} by Restconf"
 
 
 def delete(ip):
@@ -60,7 +60,7 @@ def delete(ip):
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         print('Response Body:', resp.text)
-        return f"Cannot delete: Interface loopback {studentID}"
+        return f"Cannot delete: Interface loopback {studentID} by Restconf"
 
 
 def enable(ip):
@@ -86,7 +86,7 @@ def enable(ip):
         return f"Interface loopback {studentID} is enabled successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return f"Cannot enable: Interface loopback {studentID}"
+        return f"Cannot enable: Interface loopback {studentID} by Restconf"
 
 
 def disable(ip):
@@ -112,7 +112,7 @@ def disable(ip):
         return f"Interface loopback {studentID} is shutdowned successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
-        return f"Cannot shutdown: Interface loopback {studentID}"
+        return f"Cannot shutdown: Interface loopback {studentID} by Restconf"
 
 
 def status(ip):

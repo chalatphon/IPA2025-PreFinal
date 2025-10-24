@@ -72,6 +72,7 @@ while True:
     print("Received message: " + message)
 
     clist = ["create","delete","enable","disable","status","gigabit_status","showrun"]
+    router = ["10.0.15.63","10.0.15.62","10.0.15.63","10.0.15.64","10.0.15.65"]
     # check if the text of the message starts with the magic character "/" followed by your studentID and a space and followed by a command name
     #  e.g.  "/66070123 create"
     if message.startswith("/66070041"):
@@ -97,7 +98,9 @@ while True:
                 responseMessage = "Error: No command found"
         elif(check == 3):
             command = myinput[2]
-            if(api == "restconf" and command in clist):
+            if deviceip not in router:
+                responseMessage = "Error: unrecognized ip"
+            elif(api == "restconf" and command in clist):
                 if command == "create":
                     responseMessage = restconf_final.create(deviceip)
                 elif command == "delete":
