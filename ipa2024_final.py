@@ -26,7 +26,8 @@ ACCESS_TOKEN = os.environ.get("ACCESS_TOKEN")
 
 # Defines a variable that will hold the roomId
 roomIdToGetMessages = os.environ.get("WEBEX_ROOM_ID")
-
+api = ""
+command = ""
 while True:
     # always add 1 second of delay to the loop to not go over a rate limit of API calls
     time.sleep(1)
@@ -69,34 +70,56 @@ while True:
     message = messages[0]["text"]
     print("Received message: " + message)
 
+    clist = ["create","delete","enable","disable","status","gigabit_status","showrun"]
     # check if the text of the message starts with the magic character "/" followed by your studentID and a space and followed by a command name
     #  e.g.  "/66070123 create"
     if message.startswith("/66070041"):
 
         # extract the command
-        command = message.split("/66070041 ")[1].split(" ")[0].lower().strip()
-        print(command)
-
-# 5. Complete the logic for each command
-
-        if command == "create":
-            responseMessage = restconf_final.create()
-        elif command == "delete":
-            responseMessage = restconf_final.delete()
-        elif command == "enable":
-            responseMessage = restconf_final.enable()
-        elif command == "disable":
-            responseMessage = restconf_final.disable()
-        elif command == "status":
-            responseMessage = restconf_final.status()
-        elif command == "gigabit_status":
-            responseMessage = netmiko_final.gigabit_status()
-        elif command == "showrun":
-            response = ansible_final.showrun()
-            responseMessage = response["msg"]
-            print(responseMessage)
+        myinput = message.split(" ")
+        check = len(myinput)
+        if(check == 2):
+            command = myinput[1]
+            if(command == "restconf"):
+                api = "restconf"
+                responseMessage = "Ok: Restconf"
+            elif(command == "netconf"):
+                api = "netconf"
+                responseMessage = "Ok: Netconf"
+            elif(command in clist and api == ""):
+                print(api)
+                responseMessage = "Error: No method specified"
+            elif(command in clist and api != ""):
+                print("hello")
+                responseMessage = "Error: No IP specified"
+            elif(command not in clist and api != ""):
+                responseMessage = "Error: No command found"
+            else:
+                responseMessage = "God help me"
+        elif(check == 3 and api == "restconf"):
+            deviceip = myinput[1]
+            command = myinput[2]
+            if command == "create":
+                responseMessage = restconf_final.create(deviceip)
+            elif command == "delete":
+                responseMessage = restconf_final.delete(deviceip)
+            elif command == "enable":
+                responseMessage = restconf_final.enable(deviceip)
+            elif command == "disable":
+                responseMessage = restconf_final.disable(deviceip)
+            elif command == "status":
+                responseMessage = restconf_final.status(deviceip)
+            elif command == "gigabit_status":
+                responseMessage = netmiko_final.gigabit_status(deviceip)
+            elif command == "showrun":
+                response = ansible_final.showrun()
+                responseMessage = response["msg"]
+                print(responseMessage)
+            else:
+                responseMessage = "Error: No command or unknown command"
         else:
-            responseMessage = "Error: No command or unknown command"
+            responseMessage = "Opps you did something wrong"
+
         
 # 6. Complete the code to post the message to the Webex Teams room.
 

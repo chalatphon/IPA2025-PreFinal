@@ -3,7 +3,7 @@ import requests
 requests.packages.urllib3.disable_warnings()
 
 # Router IP Address is 10.0.15.181-184
-api_url = "https://10.0.15.61/restconf/data"
+
 
 # the RESTCONF HTTP headers, including the Accept and Content-Type
 # Two YANG data formats (JSON and XML) work with RESTCONF 
@@ -14,7 +14,8 @@ headers =  {
 basicauth = ("admin", "cisco")
 studentID = "66070041"
 
-def create():
+def create(ip):
+    api_url = f"https://{ip}/restconf/data"
     yangConfig = {
         "ietf-interfaces:interface": {
             "name": f"Loopback{studentID}",
@@ -37,13 +38,14 @@ def create():
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
-        return f"Interface loopback {studentID} is created successfully"
+        return f"Interface loopback {studentID} is created successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return f"Cannot create: Interface loopback {studentID}"
 
 
-def delete():
+def delete(ip):
+    api_url = f"https://{ip}/restconf/data"
     resp = requests.delete(
         f"{api_url}/ietf-interfaces:interfaces/interface=Loopback{studentID}", 
         auth=basicauth, 
@@ -53,13 +55,14 @@ def delete():
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
-        return f"Interface loopback {studentID} is deleted successfully"
+        return f"Interface loopback {studentID} is deleted successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return f"Cannot delete: Interface loopback {studentID}"
 
 
-def enable():
+def enable(ip):
+    api_url = f"https://{ip}/restconf/data"
     yangConfig = {
         "ietf-interfaces:interface": {
             "name": f"Loopback{studentID}",
@@ -78,13 +81,14 @@ def enable():
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
-        return f"Interface loopback {studentID} is enabled successfully"
+        return f"Interface loopback {studentID} is enabled successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return f"Cannot enable: Interface loopback {studentID}"
 
 
-def disable():
+def disable(ip):
+    api_url = f"https://{ip}/restconf/data"
     yangConfig = {
         "ietf-interfaces:interface": {
             "name": f"Loopback{studentID}",
@@ -103,13 +107,14 @@ def disable():
 
     if(resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
-        return f"Interface loopback {studentID} is shutdowned successfully"
+        return f"Interface loopback {studentID} is shutdowned successfully using Restconf"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return f"Cannot shutdown: Interface loopback {studentID}"
 
 
-def status():
+def status(ip):
+    api_url = f"https://{ip}/restconf/data"
     resp = requests.get(
         f"{api_url}/ietf-interfaces:interfaces-state/interface=Loopback{studentID}",
         auth=basicauth,
@@ -123,12 +128,12 @@ def status():
         admin_status = response_json["ietf-interfaces:interface"]["admin-status"]
         oper_status = response_json["ietf-interfaces:interface"]["oper-status"]
         if admin_status == 'up' and oper_status == 'up':
-            return f"Interface loopback {studentID} is enabled"
+            return f"Interface loopback {studentID} is enabled (checked by Restconf)"
         elif admin_status == 'down' and oper_status == 'down':
-            return f"Interface loopback {studentID} is disabled"
+            return f"Interface loopback {studentID} is disabled (checked by Restconf)"
     elif(resp.status_code == 404):
         print("STATUS NOT FOUND: {}".format(resp.status_code))
-        return f"No Interface loopback {studentID}"
+        return f"No Interface loopback {studentID} (checked by Restconf)"
     else:
         print('Error. Status Code: {}'.format(resp.status_code))
         return f"Undefined Error"
