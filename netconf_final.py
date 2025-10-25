@@ -75,6 +75,7 @@ def disable(ip):
     current_status = status(ip) 
     if "No Interface" in current_status:
         return f"Cannot shutdown: Interface loopback {studentID} using Netconf"
+    
     m = manager.connect(
     host= ip,
     port=830,
@@ -82,6 +83,7 @@ def disable(ip):
     password="cisco",
     hostkey_verify=False
     )
+    
     netconf_config = """
     <config>
      <native xmlns="http://cisco.com/ns/yang/Cisco-IOS-XE-native">
@@ -102,7 +104,7 @@ def disable(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is disable successfully using Netconf"
     except:
-        return f"Cannot shutdown: Interface loopback {studentID}"
+        return f"Cannot shutdown: Interface loopback {studentID} using Netconf"
 
 def enable(ip):
     m = manager.connect(
@@ -132,7 +134,7 @@ def enable(ip):
         if '<ok/>' in xml_data:
             return "Interface loopback 66070041 is enable successfully using Netconf"
     except:
-        return f"Cannot enable: Interface loopback {studentID}"
+        return f"Cannot enable: Interface loopback {studentID} using Netconf"
 
 
 def status(ip):
